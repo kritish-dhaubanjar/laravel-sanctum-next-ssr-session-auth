@@ -112,7 +112,7 @@ import axios from "axios"
 export async function getServerSideProps({ req }) {
   axios.defaults.withCredentials = true;
   axios.defaults.headers.Cookie = req.headers.cookie;
-  axios.defaults.headers.Origin = req.headers.referer;
+  axios.defaults.headers.Origin = req.headers.host;
 
   const { data } = await axios.get('http://localhost:8000/api/user');
 
