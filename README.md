@@ -83,7 +83,7 @@ src/
 import axios from "axios"
 import { useEffect } from "react";
 
-export default function Home() {
+export default function Index() {
   axios.defaults.withCredentials = true;
 
   useEffect(() => {
