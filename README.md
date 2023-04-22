@@ -68,7 +68,7 @@ return [
 ];
 ```
 
-##### Next.js
+## Next.js
 
 ```
 src/
