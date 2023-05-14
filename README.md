@@ -125,3 +125,69 @@ export default function Home({ data }) {
   )
 }
 ```
+
+# Cookie Authentication
+## Laravel
+```php
+class EncryptCookies extends Middleware
+{
+    /**
+     * The names of the cookies that should not be encrypted.
+     *
+     * @var array<int, string>
+     */
+    protected $except = [
+        'laravel_user',
+    ];
+}
+```
+
+```php
+$cookie = cookie('laravel_user', Auth::user(), $config['lifetime'], $config['path'], $config['domain'], $config['secure'], false, false, $config['same_site'] ?? null);
+
+return response()->noContent()->withCookie($cookie);
+```
+
+## Next.js
+```javascript
+import qs from 'querystring';
+import Cookies from 'js-cookie';
+
+export function getAuthenticatedUser({ req }) {
+  try {
+    const laravel_user = typeof window === 'undefined'
+      ? qs.decode(req?.headers.cookie ?? '', '; ')?.laravel_user
+      : Cookies.get('laravel_user');
+    const auth = JSON.parse(laravel_user);
+
+    return auth;
+  } catch (error) {
+    // TODO
+  }
+}
+```
+
+```javascript
+MyApp.getInitialProps = async (context: AppContext) => {
+  const initialProps = App.getInitialProps(context);
+
+  const auth = getAuthenticatedUser({ req: context.ctx.req });
+
+  return { ...initialProps, auth };
+};
+
+function MyApp({ Component, pageProps, auth }: AppProps) {
+  if (!auth) {
+    return <Component {...pageProps} />;
+  }
+
+  return (
+    <>
+      <Navbar auth={auth} />
+      <Component {...pageProps} />
+    </>
+  );
+}
+
+export default AdmissionGuideApp;
+```
