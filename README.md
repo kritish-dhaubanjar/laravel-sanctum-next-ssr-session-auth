@@ -189,5 +189,5 @@ function MyApp({ Component, pageProps, auth }: AppProps) {
   );
 }
 
-export default AdmissionGuideApp;
+export default MyApp;
 ```
