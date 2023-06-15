@@ -191,3 +191,46 @@ function MyApp({ Component, pageProps, auth }: AppProps) {
 
 export default MyApp;
 ```
+
+# .env.example
+/etc/nginx/sites-available/default
+
+```
+server {
+    listen 80 default_server;
+	listen [::]:80 default_server;
+    server_name client.admission-guide.local;
+
+    location / {
+		# First attempt to serve request as file, then
+		# as directory, then fall back to displaying a 404.
+		# try_files $uri $uri/ =404;
+
+    proxy_pass http://localhost:3000;
+    proxy_set_header Host $host;
+    proxy_set_header X-Real-IP $remote_addr;
+    proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
+	}
+}
+
+
+server {
+    listen 80;
+    listen [::]:80;
+
+    server_name server.admission-guide.local;
+
+    location / {
+        proxy_pass http://localhost:8000;
+        proxy_set_header Host $host;
+        proxy_set_header X-Real-IP $remote_addr;
+        proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
+    }
+}
+```
+
+```
+SESSION_DOMAIN=.admission-guide.local
+FRONTEND_URL=http://client.admission-guide.local
+SANCTUM_STATEFUL_DOMAINS=client.admission-guide.local
+```
